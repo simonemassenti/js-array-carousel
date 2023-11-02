@@ -1,40 +1,75 @@
-//Vettore con indirzzo immagini
-const imagesArray = ["img/01.jpg", "img/02.jpg", "img/03.jpg", "img/04.jpg", "img/05.jpg"];
-//Variabile con elemento che conterrà img
-let itemElem = document.querySelector(".item");
-//Variabile con elemento individuato dalla classe .prev
-const arrowUp = document.querySelector(".prev");
-//Variabile con elemento individuato dalla classe .next
-const arrowDown = document.querySelector(".next");
-//Vettore che conterrà il template literal di img 
-let imageDisplayArray = [];
-//indice che scorre il carosello
+//Array that contains the image names
+const arrayImmagini = ["img/01.jpg", "img/02.jpg", "img/03.jpg", "img/04.jpg", "img/05.jpg"];
+//Element that will contains the images
+const itemsElem = document.querySelector(".items");
+//Variable that contains the string with the images elements
+let imagesString = "";
+//Index that slides the images
 let index = 0;
+//Variable that controls setInterval
+let curInterval;
+console.log(curInterval);
 
-//Ciclo che inserisce il template literal con l'indirizzo dell'immagine nel vettore imageDisplayArray
-for (let i = 0; i < imagesArray.length; i++) {
-    imageDisplayArray[i] = `<img src="${imagesArray[i]}">`
+//Innering of the images 
+for (let i = 0; i < arrayImmagini.length; i++) {
+    imagesString += `
+    <div class="item">
+        <img src="${arrayImmagini[i]}">
+    </div>`
 }
-//Viasualizziamo la prima immagine
-itemElem.innerHTML = imageDisplayArray[0];
 
-//Al click dell'elemento con classe .next viene incrementato l'indice di 1 e visualizziamo l'immagine seguente
-arrowDown.addEventListener("click", function () {
-    index++;
-    //Se l'indice supera la lunghezza del vettore - 1 si reinizializza a zero
-    if (index > imageDisplayArray.length - 1) {
-        index = 0;
-    }
-    itemElem.innerHTML = imageDisplayArray[index];
-    
-})
+itemsElem.innerHTML += imagesString;
 
-//Al click dell'elemento con classe .prev viene decrementato l'indice di 1 e visualizziamo l'immagine antecedente
-arrowUp.addEventListener("click", function () {
-    index--;
-    //Se l'indice diventa minore di 0 allore si reinizializza alla lunghezza dell'array - 1
-    if (index < 0) {
-        index = imageDisplayArray.length - 1;
-    }
-    itemElem.innerHTML = imageDisplayArray[index];
-})
+
+const itemElem = document.querySelectorAll(".item");
+
+itemElem[index].classList.add("active");
+
+
+// document.querySelector(".next").addEventListener("click", function () {
+//     itemElem[index].classList.remove("active");
+//     if (index < itemElem.length - 1) {
+//         index++;
+//     } else {
+//         index = 0;
+//     }
+//     itemElem[index].classList.add("active");
+// });
+
+// document.querySelector(".prev").addEventListener("click", function () {
+//     itemElem[index].classList.remove("active");
+//     if (index <= 0) {
+//         index = arrayImmagini.length - 1;
+//     } else {
+//         index--;
+//     }
+//     itemElem[index].classList.add("active");
+// });
+
+slideImages();
+
+ document.querySelector(".items").addEventListener("mouseover", function () {
+    clearInterval(curInterval);
+    curInterval = undefined;
+  
+ });
+
+
+ document.querySelector(".items").addEventListener("mouseout", slideImages);
+
+ /****************************/
+ //FUNCTION
+
+ function slideImages() {
+    if (curInterval === undefined) {
+        curInterval = setInterval(function () {
+            itemElem[index].classList.remove("active");
+         if (index < itemElem.length - 1) {
+             index++;
+         } else {
+             index = 0;
+         }
+         itemElem[index].classList.add("active");
+        }, 2000)
+    } 
+ }
